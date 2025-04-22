@@ -1,7 +1,10 @@
 import { sql } from '@vercel/postgres';
 import { formatCurrency } from './utils';
+import { unstable_noStore as noStore } from 'next/cache';
+
 
 export async function fetchRevenue() {
+  noStore();
 
   try {
     const data = await sql`SELECT * FROM revenue`;
@@ -13,6 +16,7 @@ export async function fetchRevenue() {
 }
 
 export async function fetchLatestInvoices() {
+  noStore();
   try {
     const data = await sql`
       SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
@@ -33,6 +37,7 @@ export async function fetchLatestInvoices() {
 }
 
 export async function fetchCardData() {
+  noStore();
   try {
     const invoiceCountPromise = sql`SELECT COUNT(*) FROM invoices`;
     const customerCountPromise = sql`SELECT COUNT(*) FROM customers`;
@@ -69,6 +74,7 @@ export async function fetchFilteredInvoices(
   query,
   currentPage,
 ) {
+  noStore();
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
@@ -101,6 +107,7 @@ export async function fetchFilteredInvoices(
 }
 
 export async function fetchInvoicesPages(query) {
+  noStore();
   try {
     const count = await sql`SELECT COUNT(*)
     FROM invoices
@@ -122,6 +129,7 @@ export async function fetchInvoicesPages(query) {
 }
 
 export async function fetchInvoiceById(id) {
+  noStore();
   try {
     const data = await sql`
       SELECT
@@ -146,6 +154,7 @@ export async function fetchInvoiceById(id) {
 }
 
 export async function fetchCustomers() {
+  noStore();
   try {
     const data = await sql`
       SELECT
@@ -164,6 +173,7 @@ export async function fetchCustomers() {
 }
 
 export async function fetchFilteredCustomers(query) {
+  noStore();
   try {
     const data = await sql`
 		SELECT
@@ -197,6 +207,7 @@ export async function fetchFilteredCustomers(query) {
 }
 
 export async function getUser(email) {
+  noStore();
   try {
     const user = await sql`SELECT * FROM users WHERE email=${email}`;
     return user.rows[0];
